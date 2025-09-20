@@ -7,14 +7,15 @@ client = Supermemory(
     api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_yYRxxIKZKvWNULBftWFspUCCEQaPxXuNzqbIgzYahJDzdtBAPTURBNCDOzXholqb"
 )
 
-def save_memory(content):
+def save_memory(content, tags):
     """
     Saves a piece of content to Supermemory and returns the memory ID.
     """
+    tags = ["apply-boost"] + tags
     try:
         response = client.memories.add(
-            content=content,
-            container_tags=["apply-boost"],
+            content = content,
+            container_tags = tags,
         )
         # Corrected: MemoryAddResponse returns an object with a 'memory_id'
         # or 'embedding_id', not a 'results' attribute.
@@ -43,7 +44,7 @@ def save_file(path):
         response = client.memories.upload_file(
             file=Path(path)
         )
-        return response.document_id
+        return response
     except Exception as e:
         print(f"An error occurred while uploading the file: {e}")
         return None
@@ -78,11 +79,26 @@ def search_file(query):
 
 # Test the corrected functions
 print("--- Testing save_memory ---")
-save_result = save_memory("This is a test case.")
+save_result = save_memory("This is a test", ["bits"])
 if save_result:
     print(f"Save successful. Memory ID: {save_result}")
 else:
     print("Save failed.")
+
+print("--- Testing save_file ---")
+save_file = save_file("./text.txt")
+if save_file:
+    print(f"Save file successful. Memory ID: {save_file}")
+else:
+    print("Save failed.")
+
+print("--- Testing search_file ---")
+search_file = search_file("text")
+if search_file:
+    print(f"Search file successful. Results:")
+    print(search_file)
+else:
+    print ("Search failed.")
 
 print("\n--- Testing search_memory ---")
 search_result = search_memory("test")
