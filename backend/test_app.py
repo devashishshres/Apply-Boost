@@ -80,7 +80,13 @@ if __name__ == '__main__':
     }
     run_test("Generate Cover Letter", f"{BASE_URL}/actions/cover-letter", cover_letter_payload)
     
-    # 7. Test Save Memory API (Placeholder)
+    # 7. Test Fraud Detection API
+    fraud_payload = {
+        "jdText": "Work from home and earn $5000 a week. No experience needed! Just send us your bank details for direct deposit and a small registration fee."
+    }
+    run_test("Fraud Detection", f"{BASE_URL}/jd/detect-fraud", fraud_payload)
+    
+    # 8. Test Save Memory API (Placeholder)
     save_memory_payload = {
         "type": "outreach",
         "company": "ExampleCorp",
@@ -91,7 +97,7 @@ if __name__ == '__main__':
     }
     run_test("Save Memory", f"{BASE_URL}/memory/save", save_memory_payload)
     
-    # 8. Test Search Memory API (Placeholder)
+    # 9. Test Search Memory API (Placeholder)
     search_memory_payload = {
         "query": "React",
         "tags": ["role:frontend"]

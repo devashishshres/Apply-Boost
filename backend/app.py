@@ -45,6 +45,11 @@ class TailoredSnippet(BaseModel):
     bullets: list[str] = Field(..., description="A list of 3 rewritten resume bullets.")
 
 
+class FraudDetectionResult(BaseModel):
+    is_suspicious: bool = Field(..., description="True if the job posting is likely fraudulent.")
+    reason: str = Field(..., description="The main reason for the suspicion.")
+    confidence_score: float = Field(..., ge=0.0, le=1.0, description="A confidence score from 0.0 to 1.0.")
+
 # =================================================================
 # 2) Helper Functions for LiteLLM Calls
 # =================================================================
@@ -189,6 +194,33 @@ def generate_cover_letter():
         text_output = call_llm(prompt)
         return jsonify({"text": text_output})
     except RuntimeError as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/jd/detect-fraud', methods=['POST'])
+def detect_fraud():
+    data = request.json
+    jd_text = data.get('jdText', '')
+    
+    # Prompt the LLM to act as a fraud detection expert
+    prompt = f"""You are a fraud detection expert. Analyze the following job posting for common red flags, such as generic descriptions, requests for personal financial information, or promises of unrealistic pay. 
+    
+    Return a single JSON object with the following structure:
+    {{
+      "is_suspicious": boolean,
+      "reason": "string",
+      "confidence_score": float
+    }}
+    
+    If no major red flags are found, set is_suspicious to false. If red flags are present, set it to true and provide a concise reason. The confidence score should reflect how strongly you suspect fraud (0.0 for no suspicion, 1.0 for high suspicion).
+    
+    Job Posting:
+    {jd_text}
+    """
+    
+    try:
+        result = call_llm(prompt, pydantic_model=FraudDetectionResult)
+        return jsonify(result)
+    except (ValueError, RuntimeError) as e:
         return jsonify({"error": str(e)}), 500
 
 

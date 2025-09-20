@@ -145,6 +145,33 @@
 
 -----
 
+## Job Fraud Detection API 🚩
+
+  * **Endpoint:** `/api/jd/detect-fraud`
+
+  * **Method:** `POST`
+
+  * **Description:** Analyzes a job description for suspicious activity or common fraud red flags, returning a flag, a reason, and a confidence score.
+
+  * **Expected Input (JSON):**
+
+    ```json
+    {
+      "jdText": "string"
+    }
+    ```
+
+  * **Expected Output (JSON):**
+
+    ```json
+    {
+      "is_suspicious": "boolean",
+      "reason": "string",
+      "confidence_score": "float"
+    }
+    ```
+----
+
 ### 7\. Save Memory (Placeholder) 🧠
 
   * **Endpoint:** `/api/memory/save`
