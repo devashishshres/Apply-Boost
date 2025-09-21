@@ -1,13 +1,17 @@
 PROMPT_TEMPLATES = {
 # Job Description
-    "jd_extract": """Extract 8 key skills and 3 must-have requirements from the following Job Description (JD). Return a single JSON object with the following structure:
+    "jd_extract": """As an expert job analyst, extract the most critical information from a Job Description (JD).
+Your task is to identify the job title, a 2-sentence executive summary, 8 key technical skills, 3 non-negotiable must-haves, and a brief company mission statement.
+Strictly return a single JSON object.
+
 {{
-  "title": "The job title",
-  "summary": "A 2-sentence summary of the job description.",
+  "title": "Job Title",
+  "summary": "A 2-sentence summary of the job.",
   "skills": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8"],
-  "mustHaves": ["must_have1", "must_have2", "must_have3"]
-  "missionStatment": "A breif description about the company's mission and culture"
+  "mustHaves": ["must_have1", "must_have2", "must_have3"],
+  "missionStatement": "The company's mission statement or a summary of its purpose."
 }}
+
 JD:
 {jd_text}
 """,
@@ -22,11 +26,29 @@ JD Skills: {jd_skills}
 Resume Text: {resume_text}
 """,
 # Outreach
-    "outreach": """Write a 120-150 word recruiter message for a {role} role at {company}. The JD summary is: "{jd_summary}". My top matching skills are: "{matches}". I also have this extra context: "{extra_context}". The message should be friendly, specific, and ask a smart question about the job, position or company. Return in plain text.""",
+    "outreach": """
+      You are a professional job seeker. Draft a concise recruiter message (120-150 words) to a recruiter about a specific role.
+
+      The message must:
+
+      Introduce yourself and express your interest in the role and company.
+
+      Clearly state how your skills align with the job description.
+
+      Include a smart, insightful question about the position or company culture.
+
+      Maintain a friendly, professional, and confident tone.
+
+      Role: {role}
+      Company: {company}
+      JD Summary: "{jd_summary}"
+      My Top Matching Skills: {matches}
+      Extra Context: {extra_context}
+    """,
 
     "recruiter_questions": """Based on this JD summary: "{jd_summary}" and key skills: "{skills}", list 5 likely recruiter screening questions for this role and company. One line per question in plain text.""",
 
-    "resume_feedback": """Rewrite a 2-3 line summary and top 3 bullets for a resume to fit the following JD summary and skills. Keep facts from my original resume and extra context. No buzzwords. 
+    "feedback_summary": """Rewrite a 2-3 line summary and top 3 bullets for a resume to fit the following JD summary and skills. Keep facts from my original resume and extra context. No buzzwords. 
 Return a single JSON object with the structure:
 {{
   "feedback": "feedback and improvement in resume",

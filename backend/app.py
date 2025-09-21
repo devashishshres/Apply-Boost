@@ -32,7 +32,9 @@ os.environ["GEMINI_API_KEY"] = gemini_api_key
 litellm.api_key = gemini_api_key
 
 # Initialize Supermemory client
-supermemory_client = Supermemory(api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_eEJTsmIeJAXUQBAvFYtQuJWzCNUmLXnUkXwJnzjAZYOTsAgHrKyyENeoruLjJtny")
+supermemory_client = Supermemory(
+    api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_eEJTsmIeJAXUQBAvFYtQuJWzCNUmLXnUkXwJnzjAZYOTsAgHrKyyENeoruLjJtny"
+)
 
 # =================================================================
 # 1) Pydantic Models for Structured Output
@@ -40,7 +42,7 @@ supermemory_client = Supermemory(api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_eEJTsmIeJAXU
 
 
 class JDExtract(BaseModel):
-    title: str = Field(..., description="Title of the job role") 
+    title: str = Field(..., description="Title of the job role")
     summary: str = Field(
         ..., description="A 2-sentence summary of the job description."
     )
@@ -63,7 +65,10 @@ class ResumeMap(BaseModel):
 
 
 class ResumeFeedback(BaseModel):
-    feedback: str = Field(..., description="A brief feedback on the resume and also improvments points")
+    feedback: str = Field(
+        ..., description="A brief feedback on the resume and also improvments points"
+    )
+
 
 class FraudDetectionResult(BaseModel):
     is_suspicious: bool = Field(
@@ -93,9 +98,10 @@ def call_llm(prompt, pydantic_model=None):
     try:
         print(f"Making LLM call with model: gemini/gemini-1.5-flash-latest")
         print(f"API Key present: {bool(os.getenv('GEMINI_API_KEY'))}")
-        
+
         response = litellm.completion(
-            model="gemini/gemini-1.5-flash-latest",
+            # model="gemini/gemini-1.5-flash-latest",
+            model="gemini/gemini-2.0-flash-lite",
             messages=messages,
             response_format=response_format,
         )
@@ -125,6 +131,7 @@ def call_llm(prompt, pydantic_model=None):
 # =================================================================
 # 3) API Endpoints
 # =================================================================
+
 
 @app.route("/api/test", methods=["GET"])
 def test_api():
@@ -204,7 +211,7 @@ def generate_questions():
 @app.route("/api/actions/tailor", methods=["POST"])
 def tailor_resume():
     data = request.json
-    prompt = PROMPT_TEMPLATES["resume_feedback"].format(
+    prompt = PROMPT_TEMPLATES["feedback_summary"].format(
         jd_summary=data["jdSummary"],
         skills=", ".join(data["skills"]),
         resume_text=data["resumeText"],
@@ -249,6 +256,7 @@ def detect_fraud():
     except (ValueError, RuntimeError) as e:
         return jsonify({"error": str(e)}), 500
 
+
 # =================================================================
 # 4) Supermemory API Endpoints (Functional)
 # =================================================================
@@ -292,7 +300,7 @@ def chatbot_response():
     user_message = data.get("message", "")
     if not user_message:
         return jsonify({"error": "No message provided."}), 400
-    
+
     # 1. Search Supermemory for context based on the user's message
     search_results = search_memory(user_message)
     context = ""
@@ -311,11 +319,11 @@ Memory Context:
 User's Message:
 {user_message}
 """
-    
+
     # 3. Call the LLM to get a response
     try:
         ai_response = call_llm(prompt)
-        
+
         # 4. Save the conversation to Supermemory for future context
         conversation_tags = ["chatbot-conversation"]
         conversation_content = f"User: {user_message}\nAssistant: {ai_response}"
