@@ -6,7 +6,7 @@ import { Suspense } from "react"
 import "../app/globals.css"
 
 export const metadata: Metadata = {
-  title: "ApplyBoost - AI-Powered Job Application Assistant",
+  title: "ApplyBoost - AI-Powered Application Toolkit",
   description:
     "Simplify hiring & recruiting with AI. Generate recruiter messages, screening questions, tailored resumes, and cover letters.",
   generator: "v0.app",

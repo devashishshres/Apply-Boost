@@ -46,7 +46,7 @@ export function UploadSection() {
   };
 
   return (
-    <section id="upload" className="py-24 px-4 relative">
+    <section id="upload-section" className="py-24 px-4 relative">
       {/* Background elements */}
       <div className="absolute inset-0 bg-gradient-to-t from-card/20 to-transparent"></div>
       <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-primary/20 to-transparent"></div>
@@ -129,11 +129,14 @@ export function UploadSection() {
                       <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                         <Upload className="w-8 h-8 text-primary" />
                       </div>
-                      <p className="text-lg font-medium mb-2">
+                      <p className="text-lg font-medium mb-2 text-muted-foreground/60">
                         {resumeFile ? resumeFile.name : "Drop your resume here"}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        or click to browse • PDF, DOC, DOCX (max 10MB)
+                      <p className="text-sm text-muted-foreground/60">
+                        {resumeFile 
+                          ? "Resume uploaded ✅" 
+                          : "or click to browse • PDF, DOC, DOCX"
+                        }
                       </p>
                     </div>
                     <input
@@ -157,7 +160,7 @@ export function UploadSection() {
                   <Textarea
                     id="job-description"
                     placeholder="Paste the complete job posting here... Include requirements, responsibilities, and company info for best results."
-                    className="min-h-[140px] resize-none bg-background/50 border-primary/20 focus:border-primary/50 text-base"
+                    className="min-h-[140px] resize-none bg-background/50 border-primary/20 focus:border-primary/50 text-base placeholder:text-muted-foreground/60"
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
                   />
@@ -177,7 +180,7 @@ export function UploadSection() {
                   <Textarea
                     id="additional-info"
                     placeholder="Add any specific achievements, career goals, or unique experiences you want highlighted..."
-                    className="min-h-[100px] resize-none bg-background/50 border-primary/20 focus:border-primary/50 text-base"
+                    className="min-h-[100px] resize-none bg-background/50 border-primary/20 focus:border-primary/50 text-base placeholder:text-muted-foreground/60"
                     value={additionalInfo}
                     onChange={(e) => setAdditionalInfo(e.target.value)}
                   />

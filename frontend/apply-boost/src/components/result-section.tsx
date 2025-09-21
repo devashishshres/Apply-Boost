@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Copy, Download, MessageSquare, HelpCircle, FileText, Mail } from "lucide-react"
+import jsPDF from 'jspdf'
 
 const sampleResults = {
   recruiterMessage: `Hi [Recruiter Name],
@@ -41,12 +42,29 @@ export function ResultsSection() {
     navigator.clipboard.writeText(text)
   }
 
+  const downloadCoverLetterPDF = () => {
+    const doc = new jsPDF()
+    
+    // Set font
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(12)
+    
+    // Split text into lines that fit the page width
+    const splitText = doc.splitTextToSize(sampleResults.coverLetter, 170)
+    
+    // Add the cover letter text
+    doc.text(splitText, 20, 35)
+    
+    // Save the PDF
+    doc.save('cover-letter.pdf')
+  }
+
   return (
     <section id="results" className="py-24 px-4 bg-gradient-to-b from-background to-card/20">
       <div className="container max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-balance">
-            Your <span className="text-primary">AI-Powered</span> Application Suite
+            Your <span className="text-primary">AI-Powered</span> Application Kit
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Four essential pieces, perfectly tailored to land your dream job
@@ -132,7 +150,7 @@ export function ResultsSection() {
                   </div>
                   <div>
                     <CardTitle className="text-xl">Cover Letter</CardTitle>
-                    <CardDescription>Professional 3-paragraph cover letter</CardDescription>
+                    <CardDescription>Professional cover letter</CardDescription>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -145,7 +163,12 @@ export function ResultsSection() {
                     <Copy className="h-4 w-4 mr-2" />
                     Copy
                   </Button>
-                  <Button variant="outline" size="sm" className="border-primary/20 hover:bg-primary/10 bg-transparent">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-primary/20 hover:bg-primary/10 bg-transparent"
+                    onClick={downloadCoverLetterPDF}
+                  >
                     <Download className="h-4 w-4 mr-2" />
                     Download
                   </Button>
@@ -159,6 +182,7 @@ export function ResultsSection() {
             </CardContent>
           </Card>
 
+          {/* Rest of the component remains the same */}
           <Card className="bg-card/50 backdrop-blur-sm border-primary/10 hover:border-primary/30 transition-all duration-300">
             <CardHeader>
               <div className="flex items-center justify-between">

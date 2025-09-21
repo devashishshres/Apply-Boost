@@ -4,19 +4,19 @@ export function ProcessSection() {
   const steps = [
     {
       icon: Upload,
-      title: "Upload & Input",
+      title: "Upload Your Info & Job Description",
       description: "Upload your resume, paste the job description, and add any personal notes",
       color: "text-blue-400",
     },
     {
       icon: Brain,
       title: "AI Analysis",
-      description: "Our AI analyzes the job requirements and your background to create perfect matches",
+      description: "Our tool extracts key must-haves from the JD and map them to your resume to show matches and gaps.",
       color: "text-primary",
     },
     {
       icon: CheckCircle,
-      title: "Generate Materials",
+      title: "Generate the Essentials",
       description: "Get recruiter messages, screening questions, tailored resume, and cover letter",
       color: "text-green-400",
     },
@@ -36,7 +36,7 @@ export function ProcessSection() {
             How <span className="text-primary">ApplyBoost</span> Works
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Four simple steps to transform your job application process
+            Four quick steps from Job Description to application-ready materials.
           </p>
         </div>
 

@@ -1,7 +1,20 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Zap, Target, Brain } from "lucide-react"
+import { Zap, Target, Brain, ArrowDown } from "lucide-react"
+import Image from "next/image"
 
 export function HeroSection() {
+  const scrollToUpload = () => {
+    const uploadSection = document.getElementById('upload-section')
+    if (uploadSection) {
+      uploadSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background effects */}
@@ -18,13 +31,22 @@ export function HeroSection() {
           <div className="space-y-8">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-primary/20 text-primary text-sm font-medium glow-effect">
               <Brain className="w-4 h-4 mr-2" />
-              AI-Powered Career Acceleration
+              AI-Powered Application Toolkit
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-bold text-balance leading-tight">
-              <span className="text-foreground">Apply</span>
-              <span className="text-primary">Boost</span>
-              <br />
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-foreground">Apply</span>
+                <span className="text-primary">Boost</span>
+                <Image
+                  src="/logo.png"
+                  alt="ApplyBoost Logo"
+                  width={80}
+                  height={80}
+                  className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 object-contain"
+                  priority
+                />
+              </div>
               <span className="text-muted-foreground text-3xl lg:text-4xl font-normal">Your AI hiring companion</span>
             </h1>
 
@@ -34,9 +56,13 @@ export function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 glow-effect">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 glow-effect"
+                onClick={scrollToUpload}
+              >
                 Start Your Boost
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowDown className="ml-2 h-5 w-5" />
               </Button>
               <Button
                 variant="outline"
