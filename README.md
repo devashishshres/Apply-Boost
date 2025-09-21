@@ -1,6 +1,6 @@
 # Apply-Boost
 
-# Apply-Boost Setup Instructions
+# Setup Instructions
 
 This guide will help you connect the frontend and backend components of Apply-Boost.
 
