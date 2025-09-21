@@ -1,3 +1,5 @@
 pydantic
 litellm
 flask
+flask-cors
+python-dotenv

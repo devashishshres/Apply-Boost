@@ -2,6 +2,7 @@ import os
 import json
 import re
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from pydantic import BaseModel, Field, ValidationError, field_validator
 import litellm
 from dotenv import load_dotenv
@@ -16,9 +17,18 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)  # Enable CORS for frontend communication
 
 # Set the Gemini API key from environment variables
-litellm.api_key = os.getenv("GEMINI_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+if not gemini_api_key:
+    print("WARNING: GEMINI_API_KEY not found in environment variables")
+else:
+    print(f"GEMINI_API_KEY loaded: {gemini_api_key[:8]}...")
+
+# Set the API key for litellm
+os.environ["GEMINI_API_KEY"] = gemini_api_key
+litellm.api_key = gemini_api_key
 
 # Initialize Supermemory client
 supermemory_client = Supermemory(api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_yYRxxIKZKvWNULBftWFspUCCEQaPxXuNzqbIgzYahJDzdtBAPTURBNCDOzXholqb")
@@ -79,6 +89,9 @@ def call_llm(prompt, pydantic_model=None):
         response_format = {"type": "json_object"}
 
     try:
+        print(f"Making LLM call with model: gemini/gemini-1.5-flash-latest")
+        print(f"API Key present: {bool(os.getenv('GEMINI_API_KEY'))}")
+        
         response = litellm.completion(
             model="gemini/gemini-1.5-flash-latest",
             messages=messages,
@@ -97,13 +110,29 @@ def call_llm(prompt, pydantic_model=None):
         print(f"Pydantic validation failed: {e}")
         raise ValueError("LLM returned malformed JSON.")
     except Exception as e:
-        print(f"LLM call failed: {e}")
-        raise RuntimeError("LLM API call failed.")
+        print(f"LLM call failed with error: {type(e).__name__}: {e}")
+        # Return more specific error information
+        if "api" in str(e).lower() or "key" in str(e).lower():
+            raise RuntimeError(f"API authentication failed: {e}")
+        elif "quota" in str(e).lower() or "limit" in str(e).lower():
+            raise RuntimeError(f"API quota exceeded: {e}")
+        else:
+            raise RuntimeError(f"LLM API call failed: {e}")
 
 
 # =================================================================
 # 3) API Endpoints
 # =================================================================
+
+@app.route("/api/test", methods=["GET"])
+def test_api():
+    """Simple test endpoint to verify API is working"""
+    try:
+        # Test a simple LLM call
+        result = call_llm("Say 'Hello, API is working!'")
+        return jsonify({"status": "success", "message": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @app.route("/api/jd/extract", methods=["POST"])
