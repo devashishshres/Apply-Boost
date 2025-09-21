@@ -140,6 +140,24 @@ export function ResultsSection() {
     doc.save("cover-letter.pdf");
   };
 
+  const resetApplication = () => {
+    // Clear stored results from localStorage
+    localStorage.removeItem("applyBoostResults");
+
+    // Reset the results state
+    setResults(null);
+
+    // Reset copied item state
+    setCopiedItem(null);
+
+    // Dispatch a custom event to notify other components to reset
+    const resetEvent = new CustomEvent("resetApplication");
+    window.dispatchEvent(resetEvent);
+
+    // Smooth scroll to top of page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const downloadResumeFeedbackPDF = () => {
     if (!isGenerated || !results?.tailoredResume?.summary) return;
 
@@ -693,6 +711,7 @@ export function ResultsSection() {
         <div className="text-center mt-16">
           <Button
             size="lg"
+            onClick={resetApplication}
             className="text-lg px-12 py-4 bg-primary hover:bg-primary/90 cursor-pointer"
           >
             Generate New Application Suite
