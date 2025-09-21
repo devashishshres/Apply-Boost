@@ -73,12 +73,13 @@ export function UploadSection() {
                 resumeText
             );
 
-            // Generate all application materials in parallel
+            // Generate all application materials and fraud detection in parallel
             const [
                 recruiterMessage,
                 screeningQuestions,
                 coverLetter,
                 tailoredResume,
+                fraudDetection,
             ] = await Promise.all([
                 apiService.generateOutreach({
                     role,
@@ -104,6 +105,7 @@ export function UploadSection() {
                     resumeText,
                     extraContext: additionalInfo,
                 }),
+                apiService.detectFraud(jobDescription),
             ]);
 
             // Store results for the results section
@@ -115,6 +117,7 @@ export function UploadSection() {
                     summary: tailoredResume.feedback || "No feedback available",
                     bullets: [], // Backend currently returns feedback text, not structured bullets
                 },
+                fraudDetection,
                 skillsMapping,
                 jdExtraction,
                 company,

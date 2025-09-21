@@ -17,6 +17,8 @@ import {
     HelpCircle,
     Mail,
     MessageSquare,
+    Shield,
+    ShieldAlert,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -50,6 +52,12 @@ I am particularly drawn to [Company Name]'s commitment to innovation and user-ce
 
 Sincerely,
 [Your Name]`,
+
+    fraudDetection: {
+        is_suspicious: false,
+        reason: "Job posting appears legitimate with specific requirements, clear company information, and professional language.",
+        confidence_score: 0.15,
+    },
 };
 
 export function ResultsSection() {
@@ -135,6 +143,70 @@ export function ResultsSection() {
                         dream job
                     </p>
                 </div>
+
+                {/* Fraud Detection Section */}
+                {displayData.fraudDetection && (
+                    <div className="mb-8">
+                        <Card className="bg-card/50 backdrop-blur-sm border-primary/10 hover:border-primary/30 transition-all duration-300">
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                            {displayData.fraudDetection
+                                                .is_suspicious ? (
+                                                <ShieldAlert className="w-5 h-5 text-primary" />
+                                            ) : (
+                                                <Shield className="w-5 h-5 text-primary" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <CardTitle className="text-xl">
+                                                {displayData.fraudDetection
+                                                    .is_suspicious
+                                                    ? "⚠️ Potential Fraud Detected"
+                                                    : "✅ Job Posting Verified"}
+                                            </CardTitle>
+                                            <CardDescription>
+                                                Fraud Meter:{" "}
+                                                {Math.round(
+                                                    displayData.fraudDetection
+                                                        .confidence_score * 100
+                                                )}
+                                                %
+                                                {displayData.fraudDetection
+                                                    .is_suspicious &&
+                                                    " - Please verify carefully"}
+                                            </CardDescription>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="bg-background/50 p-6 rounded-xl text-sm leading-relaxed border border-primary/10">
+                                    <p className="mb-4">
+                                        {displayData.fraudDetection.reason}
+                                    </p>
+                                    {displayData.fraudDetection
+                                        .is_suspicious && (
+                                        <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                                            <p className="text-sm">
+                                                <strong className="text-primary">
+                                                    Recommendation:
+                                                </strong>{" "}
+                                                Please verify this job posting
+                                                carefully. Check the company's
+                                                official website, verify contact
+                                                information, and be cautious of
+                                                any requests for personal
+                                                financial information.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
 
                 <div className="grid lg:grid-cols-2 gap-8 mb-12">
                     <Card className="bg-card/50 backdrop-blur-sm border-primary/10 hover:border-primary/30 transition-all duration-300">
