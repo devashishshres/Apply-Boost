@@ -111,7 +111,10 @@ export function UploadSection() {
                 recruiterMessage: recruiterMessage.text,
                 screeningQuestions: screeningQuestions.questions,
                 coverLetter: coverLetter.text,
-                tailoredResume,
+                tailoredResume: {
+                    summary: tailoredResume.feedback || "No feedback available",
+                    bullets: [], // Backend currently returns feedback text, not structured bullets
+                },
                 skillsMapping,
                 jdExtraction,
                 company,
@@ -241,10 +244,9 @@ export function UploadSection() {
                                                     : "Drop your resume here"}
                                             </p>
                                             <p className="text-sm text-muted-foreground/70">
-                                                {resumeFile 
-                                                    ? "Resume uploaded ✅" 
-                                                    : "or click to browse • PDF, DOC, DOCX (max 10MB)"
-                                                }
+                                                {resumeFile
+                                                    ? "Resume uploaded ✅"
+                                                    : "or click to browse • PDF, DOC, DOCX (max 10MB)"}
                                             </p>
                                         </div>
                                         <input

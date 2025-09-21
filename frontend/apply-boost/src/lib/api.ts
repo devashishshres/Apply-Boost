@@ -14,8 +14,7 @@ export interface ResumeMapResponse {
 }
 
 export interface TailoredResumeResponse {
-  summary: string;
-  bullets: string[];
+  feedback: string;
 }
 
 export interface TextResponse {
@@ -24,6 +23,10 @@ export interface TextResponse {
 
 export interface QuestionsResponse {
   questions: string[];
+}
+
+export interface ChatbotResponse {
+  response: string;
 }
 
 class ApiService {
@@ -111,6 +114,14 @@ class ApiService {
     return this.makeRequest<TextResponse>('/api/actions/cover-letter', {
       method: 'POST',
       body: JSON.stringify(params),
+    });
+  }
+
+  // Send message to chatbot
+  async sendChatMessage(message: string): Promise<ChatbotResponse> {
+    return this.makeRequest<ChatbotResponse>('/api/chatbot-response', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
     });
   }
 }
