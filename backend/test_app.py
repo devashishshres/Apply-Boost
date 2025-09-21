@@ -86,26 +86,26 @@ if __name__ == '__main__':
     # }
     # run_test("Fraud Detection", f"{BASE_URL}/jd/detect-fraud", fraud_payload)
     
-    # # 8. Test Save Memory API (Placeholder)
-    # save_memory_payload = {
-    #     "type": "outreach",
-    #     "company": "ExampleCorp",
-    #     "role": "Software Engineer",
-    #     "text": "Generated outreach text...",
-    #     "tags": ["company:examplecorp", "role:swe"],
-    #     "link": "https://example.com/job"
-    # }
-    # run_test("Save Memory", f"{BASE_URL}/memory/save", save_memory_payload)
-    
-    # # 9. Test Search Memory API (Placeholder)
-    # search_memory_payload = {
-    #     "query": "text",
-    #     "tags": ["role:frontend"]
-    # }
-    # run_test("Search Memory", f"{BASE_URL}/memory/search", search_memory_payload)
-    
-    # NEW TEST: 10. Test Chatbot Response API
-    chatbot_payload = {
-        "message": "Hi, can you help me with a resume?"
+    # 8. Test Save Memory API (Placeholder)
+    save_memory_payload = {
+        "type": "outreach",
+        "company": "ExampleCorp",
+        "role": "Software Engineer",
+        "text": "Generated outreach text...",
+        "tags": ["company:examplecorp", "role:swe"],
+        "link": "https://example.com/job"
     }
-    run_test("Chatbot Response", f"{BASE_URL}/chatbot-response", chatbot_payload)
+    run_test("Save Memory", f"{BASE_URL}/memory/save", save_memory_payload)
+    
+    # 9. Test Search Memory API (Placeholder)
+    search_memory_payload = {
+        "query": "text",
+        "tags": ["role:frontend"]
+    }
+    run_test("Search Memory", f"{BASE_URL}/memory/search", search_memory_payload)
+    
+    # # NEW TEST: 10. Test Chatbot Response API
+    # chatbot_payload = {
+    #     "message": "Hi, can you help me with a resume?"
+    # }
+    # run_test("Chatbot Response", f"{BASE_URL}/chatbot-response", chatbot_payload)

@@ -26,10 +26,10 @@ Resume Text: {resume_text}
 
     "recruiter_questions": """Based on this JD summary: "{jd_summary}" and key skills: "{skills}", list 5 likely recruiter screening questions for this role and company. One line per question in plain text.""",
 
-    "tailor_resume": """Rewrite a 2-3 line summary and top 3 bullets for a resume to fit the following JD summary and skills. Keep facts from my original resume and extra context. No buzzwords. Return a single JSON object with the structure:
+    "resume_feedback": """Rewrite a 2-3 line summary and top 3 bullets for a resume to fit the following JD summary and skills. Keep facts from my original resume and extra context. No buzzwords. 
+Return a single JSON object with the structure:
 {{
-  "summary": "new summary",
-  "bullets": ["bullet1", "bullet2", "bullet3"]
+  "feedback": "feedback and improvement in resume",
 }}
 JD Summary: {jd_summary}
 JD Skills: {skills}

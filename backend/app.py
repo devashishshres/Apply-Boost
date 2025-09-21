@@ -32,7 +32,7 @@ os.environ["GEMINI_API_KEY"] = gemini_api_key
 litellm.api_key = gemini_api_key
 
 # Initialize Supermemory client
-supermemory_client = Supermemory(api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_yYRxxIKZKvWNULBftWFspUCCEQaPxXuNzqbIgzYahJDzdtBAPTURBNCDOzXholqb")
+supermemory_client = Supermemory(api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_eEJTsmIeJAXUQBAvFYtQuJWzCNUmLXnUkXwJnzjAZYOTsAgHrKyyENeoruLjJtny")
 
 # =================================================================
 # 1) Pydantic Models for Structured Output
@@ -40,6 +40,7 @@ supermemory_client = Supermemory(api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_yYRxxIKZKvWN
 
 
 class JDExtract(BaseModel):
+    title: str = Field(..., description="Title of the job role") 
     summary: str = Field(
         ..., description="A 2-sentence summary of the job description."
     )
@@ -47,6 +48,7 @@ class JDExtract(BaseModel):
     mustHaves: list[str] = Field(
         ..., description="A list of 3 must-have requirements from the JD."
     )
+    missionStatement: str = Field(..., description="statement of the companies ai")
 
 
 class ResumeMap(BaseModel):
@@ -57,12 +59,11 @@ class ResumeMap(BaseModel):
         ...,
         description="A list of skills from the JD that are missing from the resume.",
     )
+    success: float = Field(..., description="confidence score for getting hired")
 
 
-class TailoredSnippet(BaseModel):
-    summary: str = Field(..., description="A 2-3 line rewritten resume summary.")
-    bullets: list[str] = Field(..., description="A list of 3 rewritten resume bullets.")
-
+class ResumeFeedback(BaseModel):
+    feedback: str = Field(..., description="A brief feedback on the resume and also improvments points")
 
 class FraudDetectionResult(BaseModel):
     is_suspicious: bool = Field(
@@ -203,7 +204,7 @@ def generate_questions():
 @app.route("/api/actions/tailor", methods=["POST"])
 def tailor_resume():
     data = request.json
-    prompt = PROMPT_TEMPLATES["tailor_resume"].format(
+    prompt = PROMPT_TEMPLATES["resume_feedback"].format(
         jd_summary=data["jdSummary"],
         skills=", ".join(data["skills"]),
         resume_text=data["resumeText"],
@@ -211,7 +212,7 @@ def tailor_resume():
     )
 
     try:
-        result = call_llm(prompt, pydantic_model=TailoredSnippet)
+        result = call_llm(prompt, pydantic_model=ResumeFeedback)
         return jsonify(result)
     except (ValueError, RuntimeError) as e:
         return jsonify({"error": str(e)}), 500

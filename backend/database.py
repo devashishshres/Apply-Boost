@@ -5,7 +5,7 @@ import os
 
 # Initialize the Supermemory client
 client = Supermemory(
-    api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_yYRxxIKZKvWNULBftWFspUCCEQaPxXuNzqbIgzYahJDzdtBAPTURBNCDOzXholqb"
+    api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_eEJTsmIeJAXUQBAvFYtQuJWzCNUmLXnUkXwJnzjAZYOTsAgHrKyyENeoruLjJtny"
 )
 
 def save_memory(content, tags):
