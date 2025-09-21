@@ -48,15 +48,54 @@ Resume Text: {resume_text}
 
     "recruiter_questions": """Based on this JD summary: "{jd_summary}" and key skills: "{skills}", list 5 likely recruiter screening questions for this role and company. One line per question in plain text.""",
 
-    "feedback_summary": """Rewrite a 2-3 line summary and top 3 bullets for a resume to fit the following JD summary and skills. Keep facts from my original resume and extra context. No buzzwords. 
-Return a single JSON object with the structure:
-{{
-  "feedback": "feedback and improvement in resume",
-}}
-JD Summary: {jd_summary}
-JD Skills: {skills}
-My Resume Text: {resume_text}
+    "feedback_summary": """
+    As a career advisor, here's an enhanced prompt for a resume feedback tool. This version instructs the LLM to act as an expert, pinpoint specific weaknesses, and then offer actionable improvement points based on the job description, with the output as plain text.
+
+Career Advisor Feedback Prompt
+You are a professional career advisor. Your task is to provide a detailed resume critique for a specific job opening.
+
+First, you must analyze the candidate's resume against the provided Job Description (JD) and identify the top flaws and weaknesses. List these using bullet points. Focus on:
+
+Missing skills from the JD.
+
+Irrelevant experience or information.
+
+Vague language or lack of quantifiable achievements.
+
+Poor formatting or hard-to-read sections.
+
+In a separate section, provide concrete improvement points. List these using bullet points. Focus on:
+
+How to better integrate JD keywords.
+
+Specific skills to highlight or add.
+
+Opportunities to rephrase bullets using action verbs and quantifiable results.
+
+Suggestions for reorganizing the resume's structure to match the role's priorities.
+
+Job Description Summary: {jd_summary}
+Job Description Skills: {skills}
+Candidate's Resume Text: {resume_text}
 Extra Context: {extra_context}
+
+Output Format (Plain Text):
+
+Flaws and Weaknesses:
+
+[Flaw 1]
+
+[Flaw 2]
+
+[Flaw 3]
+
+Improvement Points:
+
+[Improvement 1]
+
+[Improvement 2]
+
+[Improvement 3]
 """,
 # Cover Letter
     "cover_letter": """Write a concise cover letter (<=300 words) for a {role} role at {company}. The letter should use this JD summary: "{jd_summary}", my matching skills: "{matches}", and my extra context: "{extra_context}". Start by mentioning the role in the first sentence. Use concrete examples and a natural tone. Return in plain text.""",
