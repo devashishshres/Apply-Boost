@@ -95,6 +95,31 @@ export function ResultsSection() {
     }
   };
 
+  const formatResumeFeedbackForCopy = (summary: string) => {
+    // Clean and process the entire summary text
+    let cleanedText = summary
+      .replace("Updated Summary:", "")
+      .replace(/\*\*/g, "") // Remove bold markdown
+      .replace(/^\s*\*\s/gm, "• ") // Convert bullet points
+      .trim();
+
+    // Replace section headers with cleaner versions
+    cleanedText = cleanedText
+      .replace(/Flaws and Weaknesses:\s*/gi, "Identified Issues\n")
+      .replace(/Improvement Points:\s*/gi, "\nRecommended Improvements\n");
+
+    // Process numbered lists to add bullet points
+    cleanedText = cleanedText.replace(/^(\d+)\.\s+([^:\n]*?):\s*/gm, "• $2: ");
+
+    // Clean up any remaining formatting issues
+    cleanedText = cleanedText
+      .replace(/\n\s*\n/g, "\n") // Remove extra empty lines
+      .replace(/^\s+/gm, "") // Remove leading whitespace on lines
+      .trim();
+
+    return cleanedText;
+  };
+
   const downloadCoverLetterPDF = () => {
     const doc = new jsPDF();
 
@@ -323,10 +348,22 @@ export function ResultsSection() {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => {
+                      if (isGenerated && results?.tailoredResume?.summary) {
+                        const formattedText = formatResumeFeedbackForCopy(
+                          results.tailoredResume.summary
+                        );
+                        copyToClipboard(formattedText, "resumeFeedback");
+                      }
+                    }}
                     className="border-primary/20 hover:bg-primary/10 bg-transparent cursor-pointer"
                   >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy
+                    {copiedItem === "resumeFeedback" ? (
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4 mr-2" />
+                    )}
+                    {copiedItem === "resumeFeedback" ? "Copied!" : "Copy"}
                   </Button>
                   <Button
                     variant="outline"
