@@ -32,7 +32,7 @@ My recent work includes leading the development of a customer portal that increa
 I'd love to discuss how my expertise in modern JavaScript frameworks and passion for creating exceptional user interfaces can contribute to your team's success.
 
 Best regards,
-[Your Name]`,
+Precious Nyaupane`,
 
     screeningQuestions: [
         "Can you walk me through your experience with React and modern JavaScript frameworks?",
@@ -51,7 +51,7 @@ In my current role, I have successfully led the development of multiple high-imp
 I am particularly drawn to [Company Name]'s commitment to innovation and user-centric design. I would welcome the opportunity to discuss how my technical skills and passion for frontend development can help drive your team's continued success.
 
 Sincerely,
-[Your Name]`,
+Precious Nyaupane`,
 
     fraudDetection: {
         is_suspicious: false,
