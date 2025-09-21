@@ -38,6 +38,8 @@ Resume Text: {resume_text}
       Include a smart, insightful question about the position or company culture.
 
       Maintain a friendly, professional, and confident tone.
+      
+      If you did not get the recruiter name, address the message to the hiring team.
 
       Role: {role}
       Company: {company}
