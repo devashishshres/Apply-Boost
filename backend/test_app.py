@@ -99,7 +99,7 @@ if __name__ == '__main__':
     
     # 9. Test Search Memory API (Placeholder)
     search_memory_payload = {
-        "query": "React",
+        "query": "text",
         "tags": ["role:frontend"]
     }
     run_test("Search Memory", f"{BASE_URL}/memory/search", search_memory_payload)
