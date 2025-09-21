@@ -8,6 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import jsPDF from "jspdf";
 import {
     CheckCircle,
     Copy,
@@ -18,7 +19,6 @@ import {
     MessageSquare,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import jsPDF from 'jspdf';
 
 const sampleResults = {
     recruiterMessage: `Hi [Recruiter Name],
@@ -96,24 +96,24 @@ export function ResultsSection() {
     };
 
     const downloadCoverLetterPDF = () => {
-        const doc = new jsPDF()
-        
+        const doc = new jsPDF();
+
         // Set font
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(12)
-        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+
         // Use the actual cover letter data (generated or sample)
-        const coverLetterText = displayData.coverLetter
-        
+        const coverLetterText = displayData.coverLetter;
+
         // Split text into lines that fit the page width
-        const splitText = doc.splitTextToSize(coverLetterText, 170)
-        
+        const splitText = doc.splitTextToSize(coverLetterText, 170);
+
         // Add the cover letter text
-        doc.text(splitText, 20, 20)
-        
+        doc.text(splitText, 20, 20);
+
         // Save the PDF
-        doc.save('cover-letter.pdf')
-    }
+        doc.save("cover-letter.pdf");
+    };
 
     // Use generated results if available, otherwise show sample data
     const displayData = results || sampleResults;
@@ -286,7 +286,8 @@ export function ResultsSection() {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="border-primary/20 hover:bg-primary/10 bg-transparent cursor-pointer" onClick={downloadCoverLetterPDF}
+                                        className="border-primary/20 hover:bg-primary/10 bg-transparent cursor-pointer"
+                                        onClick={downloadCoverLetterPDF}
                                     >
                                         <Download className="h-4 w-4 mr-2" />
                                         Download
@@ -310,7 +311,7 @@ export function ResultsSection() {
                                     </div>
                                     <div>
                                         <CardTitle className="text-xl">
-                                            Tailored Resume
+                                            Tailored Resume Feedback
                                         </CardTitle>
                                         <CardDescription>
                                             Optimized to match the job
@@ -345,7 +346,7 @@ export function ResultsSection() {
                                         <div className="text-center">
                                             <FileText className="w-12 h-12 text-primary mx-auto mb-3" />
                                             <div className="text-lg font-medium text-foreground">
-                                                Your Tailored Resume
+                                                Your Resume Feedback
                                             </div>
                                             <div className="text-sm text-muted-foreground">
                                                 {isGenerated
@@ -361,35 +362,40 @@ export function ResultsSection() {
                                                     Updated Summary:
                                                 </h4>
                                                 <p className="text-sm leading-relaxed">
-                                                    {
-                                                        results.tailoredResume
-                                                            .summary
-                                                    }
+                                                    {results.tailoredResume
+                                                        .summary ||
+                                                        "No summary available"}
                                                 </p>
                                             </div>
-                                            <div>
-                                                <h4 className="font-semibold text-sm text-primary mb-2">
-                                                    Key Bullet Points:
-                                                </h4>
-                                                <ul className="space-y-2">
-                                                    {results.tailoredResume.bullets.map(
-                                                        (
-                                                            bullet: string,
-                                                            index: number
-                                                        ) => (
-                                                            <li
-                                                                key={index}
-                                                                className="text-sm leading-relaxed flex items-start"
-                                                            >
-                                                                <span className="text-primary mr-2">
-                                                                    •
-                                                                </span>
-                                                                {bullet}
-                                                            </li>
-                                                        )
-                                                    )}
-                                                </ul>
-                                            </div>
+                                            {results.tailoredResume.bullets &&
+                                                results.tailoredResume.bullets
+                                                    .length > 0 && (
+                                                    <div>
+                                                        <h4 className="font-semibold text-sm text-primary mb-2">
+                                                            Key Bullet Points:
+                                                        </h4>
+                                                        <ul className="space-y-2">
+                                                            {results.tailoredResume.bullets.map(
+                                                                (
+                                                                    bullet: string,
+                                                                    index: number
+                                                                ) => (
+                                                                    <li
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        className="text-sm leading-relaxed flex items-start"
+                                                                    >
+                                                                        <span className="text-primary mr-2">
+                                                                            •
+                                                                        </span>
+                                                                        {bullet}
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                )}
                                         </div>
                                     )}
                                     <p className="text-muted-foreground">

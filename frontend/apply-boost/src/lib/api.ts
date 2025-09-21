@@ -14,8 +14,7 @@ export interface ResumeMapResponse {
 }
 
 export interface TailoredResumeResponse {
-  summary: string;
-  bullets: string[];
+  feedback: string;
 }
 
 export interface TextResponse {
