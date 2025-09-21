@@ -107,10 +107,26 @@ def call_llm(prompt, pydantic_model=None):
         )
 
         raw_output = response.choices[0].message.content
+        print(f"Raw LLM output: {raw_output[:200]}...")  # Debug output
 
         if pydantic_model:
-            validated_output = pydantic_model.model_validate_json(raw_output)
-            return validated_output.model_dump()
+            try:
+                # Try to clean up common JSON issues
+                cleaned_output = raw_output.strip()
+                if not cleaned_output.startswith('{'):
+                    # Look for JSON within the response
+                    json_match = re.search(r'\{.*\}', cleaned_output, re.DOTALL)
+                    if json_match:
+                        cleaned_output = json_match.group(0)
+                    else:
+                        raise ValueError(f"No JSON found in response: {cleaned_output[:100]}")
+                
+                validated_output = pydantic_model.model_validate_json(cleaned_output)
+                return validated_output.model_dump()
+            except json.JSONDecodeError as e:
+                print(f"JSON decode error: {e}")
+                print(f"Raw output was: {raw_output}")
+                raise ValueError(f"LLM returned malformed JSON: {str(e)}")
 
         return raw_output
 

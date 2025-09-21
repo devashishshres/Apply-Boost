@@ -92,7 +92,7 @@ export function Chatbot({ className }: ChatbotProps) {
             {/* Floating Chat Bubble */}
             <Button
                 onClick={() => setIsOpen(true)}
-                className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg transition-all duration-300 hover:scale-110 z-50 ${
+                className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg transition-all duration-300 hover:scale-110 z-50 cursor-pointer ${
                     isOpen ? "scale-0" : "scale-100"
                 } ${className}`}
             >
@@ -121,7 +121,7 @@ export function Chatbot({ className }: ChatbotProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setIsOpen(false)}
-                                className="w-8 h-8 p-0 hover:bg-muted"
+                                className="w-8 h-8 p-0 hover:bg-muted cursor-pointer"
                             >
                                 <X className="w-4 h-4" />
                             </Button>
@@ -213,7 +213,7 @@ export function Chatbot({ className }: ChatbotProps) {
                                             !inputValue.trim() || isLoading
                                         }
                                         size="sm"
-                                        className="px-3"
+                                        className="px-3 cursor-pointer"
                                     >
                                         <Send className="w-4 h-4" />
                                     </Button>

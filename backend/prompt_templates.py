@@ -52,18 +52,27 @@ Resume Text: {resume_text}
 
     "recruiter_questions": """Based on this JD summary: "{jd_summary}" and key skills: "{skills}", list 5 likely recruiter screening questions for this role and company. One line per question in plain text.""",
 
-    "feedback_summary": """ou are a professional career advisor. Your task is to provide a detailed resume critique for a specific job opening. The critique must be delivered in a single JSON object.
+    "feedback_summary": """You are a professional career advisor. Your task is to provide a detailed resume critique for a specific job opening. 
 
-    The JSON output should contain a single key, feedback, which holds all the analysis. Within this key, first find and list the flaws and weaknesses in the resume based on the job description. Then, in a separate section, provide concrete improvement points to address those flaws.
+Analyze the provided resume against the job description and provide structured feedback in JSON format.
 
-    The feedback should be comprehensive, actionable, and formatted as a single string. Use headings like "Flaws and Weaknesses" and "Improvement Points" within the string to organize the content clearly.
-Return a single JSON object with the structure:
+The JSON output must contain a single key "feedback" with a comprehensive analysis string that includes:
+
+1. A "Flaws and Weaknesses:" section listing numbered issues with the resume
+2. An "Improvement Points:" section with numbered actionable recommendations
+
+Format each point as: "1. **Title:** Description"
+
+Be specific, actionable, and professional. Focus on ATS compatibility, skill alignment, and presentation improvements.
+
+Return ONLY a valid JSON object with this exact structure:
 {{
-  "feedback": "feedback and improvement in resume",
+  "feedback": "Flaws and Weaknesses:\\n1. **Issue Title:** Detailed description...\\n\\nImprovement Points:\\n1. **Improvement Title:** Detailed recommendation..."
 }}
+
 JD Summary: {jd_summary}
 JD Skills: {skills}
-My Resume Text: {resume_text}
+Resume Text: {resume_text}
 Extra Context: {extra_context}
 """,
 # Cover Letter

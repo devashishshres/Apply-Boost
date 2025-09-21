@@ -29,7 +29,7 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left side - Main content */}
           <div className="space-y-8">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-primary/20 text-primary text-sm font-medium glow-effect">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-card border border-primary/20 text-primary text-sm font-medium">
               <Brain className="w-4 h-4 mr-2" />
               AI-Powered Application Toolkit
             </div>
@@ -60,7 +60,7 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 glow-effect cursor-pointer"
+                className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 cursor-pointer"
                 onClick={scrollToUpload}
               >
                 Start Your Boost
