@@ -81,13 +81,13 @@ The frontend now calls these backend endpoints:
 
 ## Features Added
 
-✅ **API Integration**: Frontend now calls real backend endpoints
-✅ **File Upload**: Resume file upload with validation
-✅ **Error Handling**: Proper error messages and validation
-✅ **Loading States**: Visual feedback during API calls
-✅ **Real-time Results**: Displays actual generated content
-✅ **Copy to Clipboard**: Easy copying of generated content
-✅ **Responsive Design**: Works on all device sizes
+✅ **API Integration**: Frontend now calls real backend endpoints \
+✅ **File Upload**: Resume file upload with validation\
+✅ **Error Handling**: Proper error messages and validation\
+✅ **Loading States**: Visual feedback during API calls\
+✅ **Real-time Results**: Displays actual generated content\
+✅ **Copy to Clipboard**: Easy copying of generated content\
+✅ **Responsive Design**: Works on all device sizes\
 
 ## Environment Configuration
 
