@@ -96,53 +96,56 @@ export function UploadSection() {
         resumeText
       );
 
-      // Generate all application materials in parallel
-      const [
-        recruiterMessage,
-        screeningQuestions,
-        coverLetter,
-        tailoredResume,
-      ] = await Promise.all([
-        apiService.generateOutreach({
-          role,
-          company,
-          jdSummary: jdExtraction.summary,
-          matches: skillsMapping.matches,
-          extraContext: additionalInfo,
-        }),
-        apiService.generateRecruiterQuestions({
-          jdSummary: jdExtraction.summary,
-          skills: jdExtraction.skills,
-        }),
-        apiService.generateCoverLetter({
-          role,
-          company,
-          jdSummary: jdExtraction.summary,
-          matches: skillsMapping.matches,
-          extraContext: additionalInfo,
-        }),
-        apiService.tailorResume({
-          jdSummary: jdExtraction.summary,
-          skills: jdExtraction.skills,
-          resumeText,
-          extraContext: additionalInfo,
-        }),
-      ]);
+            // Generate all application materials and fraud detection in parallel
+            const [
+                recruiterMessage,
+                screeningQuestions,
+                coverLetter,
+                tailoredResume,
+                fraudDetection,
+            ] = await Promise.all([
+                apiService.generateOutreach({
+                    role,
+                    company,
+                    jdSummary: jdExtraction.summary,
+                    matches: skillsMapping.matches,
+                    extraContext: additionalInfo,
+                }),
+                apiService.generateRecruiterQuestions({
+                    jdSummary: jdExtraction.summary,
+                    skills: jdExtraction.skills,
+                }),
+                apiService.generateCoverLetter({
+                    role,
+                    company,
+                    jdSummary: jdExtraction.summary,
+                    matches: skillsMapping.matches,
+                    extraContext: additionalInfo,
+                }),
+                apiService.tailorResume({
+                    jdSummary: jdExtraction.summary,
+                    skills: jdExtraction.skills,
+                    resumeText,
+                    extraContext: additionalInfo,
+                }),
+                apiService.detectFraud(jobDescription),
+            ]);
 
-      // Store results for the results section
-      const results = {
-        recruiterMessage: recruiterMessage.text,
-        screeningQuestions: screeningQuestions.questions,
-        coverLetter: coverLetter.text,
-        tailoredResume: {
-          summary: tailoredResume.feedback || "No feedback available",
-          bullets: [], // Backend currently returns feedback text, not structured bullets
-        },
-        skillsMapping,
-        jdExtraction,
-        company,
-        role,
-      };
+            // Store results for the results section
+            const results = {
+                recruiterMessage: recruiterMessage.text,
+                screeningQuestions: screeningQuestions.questions,
+                coverLetter: coverLetter.text,
+                tailoredResume: {
+                    summary: tailoredResume.feedback || "No feedback available",
+                    bullets: [], // Backend currently returns feedback text, not structured bullets
+                },
+                fraudDetection,
+                skillsMapping,
+                jdExtraction,
+                company,
+                role,
+            };
 
       // Store results in localStorage for the results component to access
       localStorage.setItem("applyBoostResults", JSON.stringify(results));

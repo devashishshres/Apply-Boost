@@ -29,6 +29,12 @@ export interface ChatbotResponse {
   response: string;
 }
 
+export interface FraudDetectionResponse {
+  is_suspicious: boolean;
+  reason: string;
+  confidence_score: number;
+}
+
 class ApiService {
   private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
@@ -122,6 +128,14 @@ class ApiService {
     return this.makeRequest<ChatbotResponse>('/api/chatbot-response', {
       method: 'POST',
       body: JSON.stringify({ message }),
+    });
+  }
+
+  // Detect fraud in job description
+  async detectFraud(jdText: string): Promise<FraudDetectionResponse> {
+    return this.makeRequest<FraudDetectionResponse>('/api/jd/detect-fraud', {
+      method: 'POST',
+      body: JSON.stringify({ jdText }),
     });
   }
 }
