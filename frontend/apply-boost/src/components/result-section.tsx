@@ -194,7 +194,7 @@ export function ResultsSection() {
                                             Screening Questions
                                         </CardTitle>
                                         <CardDescription>
-                                            Likely questions to prepare for
+                                            Likely questions to prepare for:
                                         </CardDescription>
                                     </div>
                                 </div>
@@ -224,10 +224,20 @@ export function ResultsSection() {
                             </div>
                         </CardHeader>
                         <CardContent>
+                            {/* Show intro text separately if it exists in generated results */}
+                            {isGenerated && displayData.screeningQuestions && displayData.screeningQuestions[0] && displayData.screeningQuestions[0].includes("Here are") && (
+                                <div className="bg-background/50 p-4 rounded-xl text-sm border border-primary/10 mb-4 text-muted-foreground">
+                                    {displayData.screeningQuestions[0]}
+                                </div>
+                            )}
+                            
                             <div className="space-y-4">
                                 {(
                                     displayData.screeningQuestions ||
                                     sampleResults.screeningQuestions
+                                ).filter((question: string, index: number) => 
+                                    // Filter out intro text if it's the first item and contains "Here are"
+                                    !(index === 0 && question.includes("Here are"))
                                 ).map((question: string, index: number) => (
                                     <div
                                         key={index}
@@ -372,7 +382,7 @@ export function ResultsSection() {
                                                     Key Bullet Points:
                                                 </h4>
                                                 <ul className="space-y-2">
-                                                    {results.tailoredResume.bullets.map(
+                                                    {results.tailoredResume.bullets?.map(
                                                         (
                                                             bullet: string,
                                                             index: number
