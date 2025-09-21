@@ -11,6 +11,7 @@ from supermemory import Supermemory, APIConnectionError, RateLimitError, APIStat
 
 # Import the prompt templates
 from prompt_templates import PROMPT_TEMPLATES
+from flask_cors import CORS
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -247,7 +248,6 @@ def detect_fraud():
     except (ValueError, RuntimeError) as e:
         return jsonify({"error": str(e)}), 500
 
-
 # =================================================================
 # 4) Supermemory API Endpoints (Functional)
 # =================================================================
@@ -261,7 +261,6 @@ def save_memory_endpoint():
     result = save_memory(content, tags)
 
     if result:
-        # Assuming save_memory now returns the response object, get the memory_id
         return jsonify({"id": result.id})
     else:
         return jsonify({"error": "Failed to save memory"}), 500
@@ -281,6 +280,51 @@ def search_memory_endpoint():
         return jsonify({"items": processed_results})
     else:
         return jsonify({"items": []})
+
+
+# =================================================================
+# 5) Chatbot API Endpoint
+# =================================================================
+@app.route("/api/chatbot-response", methods=["POST"])
+def chatbot_response():
+    data = request.json
+    user_message = data.get("message", "")
+    if not user_message:
+        return jsonify({"error": "No message provided."}), 400
+    
+    # 1. Search Supermemory for context based on the user's message
+    search_results = search_memory(user_message)
+    context = ""
+    if search_results:
+        # Concatenate memory contents into a single context string
+        context_items = [r.memory for r in search_results]
+        context = " ".join(context_items)
+
+    # 2. Build the prompt for the LLM
+    # The prompt tells the LLM to use the context to answer the user's question
+    prompt = f"""You are a helpful assistant. You have access to the following past conversations and memories. Use this information to inform your response. If the information isn't relevant, respond normally.
+
+Memory Context:
+{context}
+
+User's Message:
+{user_message}
+"""
+    
+    # 3. Call the LLM to get a response
+    try:
+        ai_response = call_llm(prompt)
+        
+        # 4. Save the conversation to Supermemory for future context
+        conversation_tags = ["chatbot-conversation"]
+        conversation_content = f"User: {user_message}\nAssistant: {ai_response}"
+        save_memory(conversation_content, conversation_tags)
+
+        # 5. Return the AI's response to the client
+        return jsonify({"response": ai_response})
+
+    except (ValueError, RuntimeError) as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
