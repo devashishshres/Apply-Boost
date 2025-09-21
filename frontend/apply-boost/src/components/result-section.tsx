@@ -140,6 +140,104 @@ export function ResultsSection() {
     doc.save("cover-letter.pdf");
   };
 
+  const downloadResumeFeedbackPDF = () => {
+    if (!isGenerated || !results?.tailoredResume?.summary) return;
+
+    const doc = new jsPDF();
+    let yPosition = 20;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 20;
+    const lineHeight = 7;
+
+    // Set font
+    doc.setFont("helvetica", "normal");
+
+    // Add title
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Resume Analysis & Feedback", margin, yPosition);
+    yPosition += 15; // Space after title
+
+    // Get formatted resume feedback text
+    const formattedFeedback = formatResumeFeedbackForCopy(
+      results.tailoredResume.summary
+    );
+
+    // Split into sections
+    const sections = formattedFeedback.split(/(?=Recommended Improvements)/);
+
+    sections.forEach((section, sectionIndex) => {
+      // Add spacing between sections
+      if (sectionIndex > 0) {
+        yPosition += 10;
+      }
+
+      // Process each line in the section
+      const lines = section.split("\n");
+
+      lines.forEach((line) => {
+        if (!line.trim()) return; // Skip empty lines
+
+        // Check if we need a new page
+        if (yPosition > pageHeight - 30) {
+          doc.addPage();
+          yPosition = 20;
+        }
+
+        // Handle section headers (Identified Issues, Recommended Improvements)
+        if (
+          line === "Identified Issues" ||
+          line === "Recommended Improvements"
+        ) {
+          doc.setFontSize(14);
+          doc.setFont("helvetica", "bold");
+          doc.text(line, margin, yPosition);
+          yPosition += 10;
+        } else if (line.startsWith("• ")) {
+          // Handle bullet points
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "normal");
+
+          // Split long lines to fit page width
+          const splitText = doc.splitTextToSize(line, 170);
+
+          // Add each split line
+          splitText.forEach((splitLine: string, index: number) => {
+            if (yPosition > pageHeight - 30) {
+              doc.addPage();
+              yPosition = 20;
+            }
+
+            doc.text(splitLine, margin, yPosition);
+            yPosition += lineHeight;
+          });
+
+          // Add small space after each bullet point
+          yPosition += 2;
+        } else if (line.trim()) {
+          // Handle regular text
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "normal");
+
+          const splitText = doc.splitTextToSize(line, 170);
+
+          splitText.forEach((splitLine: string) => {
+            if (yPosition > pageHeight - 30) {
+              doc.addPage();
+              yPosition = 20;
+            }
+
+            doc.text(splitLine, margin, yPosition);
+            yPosition += lineHeight;
+          });
+        }
+      });
+    });
+
+    // Save the PDF
+    doc.save("resume-feedback.pdf");
+  };
+
   // Use generated results if available, otherwise show sample data
   const displayData = results || sampleResults;
   const isGenerated = !!results;
@@ -368,6 +466,7 @@ export function ResultsSection() {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={downloadResumeFeedbackPDF}
                     className="border-primary/20 hover:bg-primary/10 bg-transparent cursor-pointer"
                   >
                     <Download className="h-4 w-4 mr-2" />
