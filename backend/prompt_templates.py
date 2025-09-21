@@ -48,7 +48,11 @@ Resume Text: {resume_text}
 
     "recruiter_questions": """Based on this JD summary: "{jd_summary}" and key skills: "{skills}", list 5 likely recruiter screening questions for this role and company. One line per question in plain text.""",
 
-    "feedback_summary": """Rewrite a 2-3 line summary and top 3 bullets for a resume to fit the following JD summary and skills. Keep facts from my original resume and extra context. No buzzwords. 
+    "feedback_summary": """ou are a professional career advisor. Your task is to provide a detailed resume critique for a specific job opening. The critique must be delivered in a single JSON object.
+
+    The JSON output should contain a single key, feedback, which holds all the analysis. Within this key, first find and list the flaws and weaknesses in the resume based on the job description. Then, in a separate section, provide concrete improvement points to address those flaws.
+
+    The feedback should be comprehensive, actionable, and formatted as a single string. Use headings like "Flaws and Weaknesses" and "Improvement Points" within the string to organize the content clearly.
 Return a single JSON object with the structure:
 {{
   "feedback": "feedback and improvement in resume",
