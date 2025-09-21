@@ -315,7 +315,7 @@ export function UploadSection() {
                                         !jobDescription.trim()
                                     }
                                     size="lg"
-                                    className="w-full text-lg bg-primary hover:bg-primary/90 glow-effect disabled:opacity-50 cursor-pointer"
+                                    className="w-full text-lg bg-primary hover:bg-primary/90 disabled:opacity-50 cursor-pointer"
                                 >
                                     {isGenerating ? (
                                         <>

@@ -416,7 +416,7 @@ export function ResultsSection() {
                 <div className="text-center mt-16">
                     <Button
                         size="lg"
-                        className="text-lg px-12 py-4 bg-primary hover:bg-primary/90 glow-effect cursor-pointer"
+                        className="text-lg px-12 py-4 bg-primary hover:bg-primary/90 cursor-pointer"
                     >
                         Generate New Application Suite
                     </Button>
