@@ -58,18 +58,11 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 glow-effect"
+                className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 glow-effect cursor-pointer"
                 onClick={scrollToUpload}
               >
                 Start Your Boost
                 <ArrowDown className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-4 border-primary/30 hover:bg-primary/10 bg-transparent"
-              >
-                Watch Demo
               </Button>
             </div>
           </div>

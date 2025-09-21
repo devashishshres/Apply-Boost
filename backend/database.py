@@ -1,6 +1,7 @@
 import os
 from supermemory import Supermemory, APIConnectionError, RateLimitError, APIStatusError
 from pathlib import Path
+import os
 
 # Initialize the Supermemory client
 client = Supermemory(
@@ -77,33 +78,34 @@ def search_file(query):
         print(f"An error occurred while searching documents: {e}")
         return None
 
-# Test the corrected functions
-print("--- Testing save_memory ---")
-save_result = save_memory("This is a test", ["bits"])
-if save_result:
-    print(f"Save successful. Memory ID: {save_result}")
-else:
-    print("Save failed.")
+if __name__ == "__main__":
+    # Test the corrected functions
+    print("--- Testing save_memory ---")
+    save_result = save_memory("This is a test", ["bits"])
+    if save_result:
+        print(f"Save successful. Memory ID: {save_result.id}")
+    else:
+        print("Save failed.")
 
-print("--- Testing save_file ---")
-save_file = save_file("./text.txt")
-if save_file:
-    print(f"Save file successful. Memory ID: {save_file}")
-else:
-    print("Save failed.")
+    print("--- Testing save_file ---")
+    save_file = save_file("./text.txt")
+    if save_file:
+        print(f"Save file successful. Memory ID: {save_file}")
+    else:
+        print("Save failed.")
 
-print("--- Testing search_file ---")
-search_file = search_file("text")
-if search_file:
-    print(f"Search file successful. Results:")
-    print(search_file)
-else:
-    print ("Search failed.")
+    print("--- Testing search_file ---")
+    search_file = search_file("text")
+    if search_file:
+        print(f"Search file successful. Results:")
+        print(search_file[0].chunks[0].content)
+    else:
+        print ("Search failed.")
 
-print("\n--- Testing search_memory ---")
-search_result = search_memory("test")
-if search_result:
-    print("Search successful. Results:")
-    print(search_result)
-else:
-    print("Search failed.")
+    print("\n--- Testing search_memory ---")
+    search_result = search_memory("test")
+    if search_result:
+        print("Search successful. Results:")
+        print(search_result[0].memory)
+    else:
+        print("Search failed.")
