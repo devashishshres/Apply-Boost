@@ -41,7 +41,7 @@ Resume Text: {resume_text}
       
       If you did not get the recruiter name, address the message to the hiring team.
 
-      Always sign the message with "Best regards, Precious Nyaupane" at the end.
+      Always sign the message with "Best regards, {applicant_name}" at the end.
 
       Role: {role}
       Company: {company}
@@ -76,7 +76,7 @@ Resume Text: {resume_text}
 Extra Context: {extra_context}
 """,
 # Cover Letter
-    "cover_letter": """Write a concise cover letter (<=300 words) for a {role} role at {company}. The letter should use this JD summary: "{jd_summary}", my matching skills: "{matches}", and my extra context: "{extra_context}". Start by mentioning the role in the first sentence. Use concrete examples and a natural tone. Always end with "Sincerely, Precious Nyaupane". Return in plain text.""",
+    "cover_letter": """Write a concise cover letter (<=300 words) for a {role} role at {company}. The letter should use this JD summary: "{jd_summary}", my matching skills: "{matches}", and my extra context: "{extra_context}". Start by mentioning the role in the first sentence. Use concrete examples and a natural tone. Always end with "Sincerely, {applicant_name}". Return in plain text.""",
 
     "fraud_detection": """You are a fraud detection expert. Analyze the following job posting for common red flags, such as generic descriptions, requests for personal financial information, or promises of unrealistic pay for that role. 
     
@@ -91,5 +91,20 @@ If no major red flags are found, set is_suspicious to false. If red flags are pr
     
 Job Posting:
 {jd_text}
+""",
+
+    "extract_name": """You are an expert at extracting personal information from resumes. Your task is to identify the full name of the person from the resume text.
+
+Look for the name in common locations:
+1. At the top of the resume (usually the first line or header)
+2. In contact information sections
+3. In email addresses or signatures
+
+Return a JSON object with the extracted name and confidence score.
+
+If you cannot find a clear name, return "Unknown" with low confidence.
+
+Resume Text:
+{resume_text}
 """
 }

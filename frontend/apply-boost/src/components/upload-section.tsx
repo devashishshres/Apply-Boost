@@ -91,6 +91,19 @@ export function UploadSection() {
       console.log("Extracted text length:", resumeText.length);
       console.log("First 200 characters:", resumeText.substring(0, 200));
 
+      // Extract applicant name from resume
+      const nameExtraction = await apiService.extractName(resumeText);
+      const applicantName =
+        nameExtraction.confidence > 0.5
+          ? nameExtraction.name
+          : "Precious Nyaupane";
+      console.log(
+        "Extracted name:",
+        applicantName,
+        "Confidence:",
+        nameExtraction.confidence
+      );
+
       // Extract job description details
       const jdExtraction = await apiService.extractJobDescription(
         jobDescription
@@ -117,6 +130,7 @@ export function UploadSection() {
           jdSummary: jdExtraction.summary,
           matches: skillsMapping.matches,
           extraContext: additionalInfo,
+          applicantName,
         }),
         apiService.generateRecruiterQuestions({
           jdSummary: jdExtraction.summary,
@@ -128,6 +142,7 @@ export function UploadSection() {
           jdSummary: jdExtraction.summary,
           matches: skillsMapping.matches,
           extraContext: additionalInfo,
+          applicantName,
         }),
         apiService.tailorResume({
           jdSummary: jdExtraction.summary,

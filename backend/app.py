@@ -11,7 +11,6 @@ from supermemory import Supermemory, APIConnectionError, RateLimitError, APIStat
 
 # Import the prompt templates
 from prompt_templates import PROMPT_TEMPLATES
-from flask_cors import CORS
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -68,6 +67,11 @@ class ResumeFeedback(BaseModel):
     feedback: str = Field(
         ..., description="A brief feedback on the resume and also improvments points"
     )
+
+
+class NameExtraction(BaseModel):
+    name: str = Field(..., description="The full name of the person from the resume")
+    confidence: float = Field(..., description="Confidence score (0-1) of the name extraction")
 
 
 class FraudDetectionResult(BaseModel):
@@ -191,15 +195,32 @@ def map_resume():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/resume/extract-name", methods=["POST"])
+def extract_name():
+    data = request.json
+    resume_text = data.get("resumeText", "")
+    
+    prompt = PROMPT_TEMPLATES["extract_name"].format(resume_text=resume_text)
+    
+    try:
+        result = call_llm(prompt, pydantic_model=NameExtraction)
+        return jsonify(result)
+    except (ValueError, RuntimeError) as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/api/actions/outreach", methods=["POST"])
 def generate_outreach():
     data = request.json
+    applicant_name = data.get("applicantName", "Precious Nyaupane")  # Fallback to default
+    
     prompt = PROMPT_TEMPLATES["outreach"].format(
         role=data["role"],
         company=data["company"],
         jd_summary=data["jdSummary"],
         matches=", ".join(data["matches"]),
         extra_context=data.get("extraContext", ""),
+        applicant_name=applicant_name,
     )
 
     try:
@@ -244,12 +265,15 @@ def tailor_resume():
 @app.route("/api/actions/cover-letter", methods=["POST"])
 def generate_cover_letter():
     data = request.json
+    applicant_name = data.get("applicantName", "Precious Nyaupane")  # Fallback to default
+    
     prompt = PROMPT_TEMPLATES["cover_letter"].format(
         role=data["role"],
         company=data["company"],
         jd_summary=data["jdSummary"],
         matches=", ".join(data["matches"]),
         extra_context=data.get("extraContext", ""),
+        applicant_name=applicant_name,
     )
 
     try:
