@@ -33,6 +33,11 @@ export interface FraudDetection {
   confidence_score: number;
 }
 
+export interface NameExtraction {
+  name: string;
+  confidence: number;
+}
+
 export interface MemoryItem {
   type: string;
   company: string;

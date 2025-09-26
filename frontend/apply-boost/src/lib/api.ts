@@ -1,6 +1,6 @@
 // API service layer for communicating with the Apply-Boost backend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export interface JDExtractResponse {
   summary: string;
@@ -35,13 +35,21 @@ export interface FraudDetectionResponse {
   confidence_score: number;
 }
 
+export interface NameExtractionResponse {
+  name: string;
+  confidence: number;
+}
+
 class ApiService {
-  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  private async makeRequest<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    
+
     const response = await fetch(url, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       ...options,
@@ -57,18 +65,32 @@ class ApiService {
 
   // Extract job description into summary, skills, and must-haves
   async extractJobDescription(jdText: string): Promise<JDExtractResponse> {
-    return this.makeRequest<JDExtractResponse>('/api/jd/extract', {
-      method: 'POST',
+    return this.makeRequest<JDExtractResponse>("/api/jd/extract", {
+      method: "POST",
       body: JSON.stringify({ jdText }),
     });
   }
 
   // Map resume skills against job description skills
-  async mapResume(skills: string[], resumeText: string): Promise<ResumeMapResponse> {
-    return this.makeRequest<ResumeMapResponse>('/api/resume/map', {
-      method: 'POST',
+  async mapResume(
+    skills: string[],
+    resumeText: string
+  ): Promise<ResumeMapResponse> {
+    return this.makeRequest<ResumeMapResponse>("/api/resume/map", {
+      method: "POST",
       body: JSON.stringify({ skills, resumeText }),
     });
+  }
+
+  // Extract name from resume
+  async extractName(resumeText: string): Promise<NameExtractionResponse> {
+    return this.makeRequest<NameExtractionResponse>(
+      "/api/resume/extract-name",
+      {
+        method: "POST",
+        body: JSON.stringify({ resumeText }),
+      }
+    );
   }
 
   // Generate recruiter outreach message
@@ -78,9 +100,10 @@ class ApiService {
     jdSummary: string;
     matches: string[];
     extraContext?: string;
+    applicantName?: string;
   }): Promise<TextResponse> {
-    return this.makeRequest<TextResponse>('/api/actions/outreach', {
-      method: 'POST',
+    return this.makeRequest<TextResponse>("/api/actions/outreach", {
+      method: "POST",
       body: JSON.stringify(params),
     });
   }
@@ -90,10 +113,13 @@ class ApiService {
     jdSummary: string;
     skills: string[];
   }): Promise<QuestionsResponse> {
-    return this.makeRequest<QuestionsResponse>('/api/actions/recruiter-questions', {
-      method: 'POST',
-      body: JSON.stringify(params),
-    });
+    return this.makeRequest<QuestionsResponse>(
+      "/api/actions/recruiter-questions",
+      {
+        method: "POST",
+        body: JSON.stringify(params),
+      }
+    );
   }
 
   // Generate tailored resume snippet
@@ -103,8 +129,8 @@ class ApiService {
     resumeText: string;
     extraContext?: string;
   }): Promise<TailoredResumeResponse> {
-    return this.makeRequest<TailoredResumeResponse>('/api/actions/tailor', {
-      method: 'POST',
+    return this.makeRequest<TailoredResumeResponse>("/api/actions/tailor", {
+      method: "POST",
       body: JSON.stringify(params),
     });
   }
@@ -116,25 +142,26 @@ class ApiService {
     jdSummary: string;
     matches: string[];
     extraContext?: string;
+    applicantName?: string;
   }): Promise<TextResponse> {
-    return this.makeRequest<TextResponse>('/api/actions/cover-letter', {
-      method: 'POST',
+    return this.makeRequest<TextResponse>("/api/actions/cover-letter", {
+      method: "POST",
       body: JSON.stringify(params),
     });
   }
 
   // Send message to chatbot
   async sendChatMessage(message: string): Promise<ChatbotResponse> {
-    return this.makeRequest<ChatbotResponse>('/api/chatbot-response', {
-      method: 'POST',
+    return this.makeRequest<ChatbotResponse>("/api/chatbot-response", {
+      method: "POST",
       body: JSON.stringify({ message }),
     });
   }
 
   // Detect fraud in job description
   async detectFraud(jdText: string): Promise<FraudDetectionResponse> {
-    return this.makeRequest<FraudDetectionResponse>('/api/jd/detect-fraud', {
-      method: 'POST',
+    return this.makeRequest<FraudDetectionResponse>("/api/jd/detect-fraud", {
+      method: "POST",
       body: JSON.stringify({ jdText }),
     });
   }
