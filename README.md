@@ -6,6 +6,8 @@
 
 **Apply-Boost** is an intelligent job application assistant that leverages artificial intelligence to help job seekers create compelling, personalized application materials. By analyzing your resume against specific job descriptions, Apply-Boost generates tailored content that significantly improves your chances of landing interviews.
 
+https://github.com/user-attachments/assets/7dc871e8-7255-4c07-90cf-5dfcc89265aa
+
 ## Problem Statement
 
 Job applications today face several critical challenges:
