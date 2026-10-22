@@ -86,23 +86,6 @@ if __name__ == '__main__':
     # }
     # run_test("Fraud Detection", f"{BASE_URL}/jd/detect-fraud", fraud_payload)
     
-    # 8. Test Save Memory API (Placeholder)
-    save_memory_payload = {
-        "type": "machine_learning",
-        "company": "oscorp",
-        "role": "Biomedical machine engineering",
-        "tags": ["company:corporate", "role:swe"],
-        "link": "https://inoyui.com/job"
-    }
-    run_test("Save Memory", f"{BASE_URL}/memory/save", save_memory_payload)
-    
-    # 9. Test Search Memory API (Placeholder)
-    search_memory_payload = {
-        "query": "text",
-        "tags": ["role:frontend"]
-    }
-    run_test("Search Memory", f"{BASE_URL}/memory/search", search_memory_payload)
-    
     # NEW TEST: 10. Test Chatbot Response API
     # chatbot_payload = {
     #     "message": "Hi, can you help me with a resume?"

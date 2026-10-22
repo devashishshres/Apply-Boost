@@ -20,6 +20,7 @@ This guide will help you connect the frontend and backend components of Apply-Bo
 
     ```
     GEMINI_API_KEY=your_gemini_api_key_here
+    SUPERMEMORY_API_KEY=your_supermemory_api_key_here
     ```
 
 4. Start the Flask backend server:
