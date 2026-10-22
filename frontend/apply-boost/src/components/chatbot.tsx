@@ -14,6 +14,21 @@ interface Message {
     timestamp: Date;
 }
 
+// Per-browser id that scopes the chatbot's memory on the backend
+function getChatSessionId(): string {
+    try {
+        let id = localStorage.getItem("chatSessionId");
+        if (!id) {
+            id = crypto.randomUUID();
+            localStorage.setItem("chatSessionId", id);
+        }
+        return id;
+    } catch {
+        // Storage blocked (e.g. private mode): memory just won't persist across reloads
+        return crypto.randomUUID();
+    }
+}
+
 interface ChatbotProps {
     className?: string;
 }
@@ -55,7 +70,10 @@ export function Chatbot({ className }: ChatbotProps) {
         setIsLoading(true);
 
         try {
-            const data = await apiService.sendChatMessage(userMessage.text);
+            const data = await apiService.sendChatMessage(
+                userMessage.text,
+                getChatSessionId()
+            );
             const botMessage: Message = {
                 id: `bot-${Date.now()}`,
                 text: data.response,

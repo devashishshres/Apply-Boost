@@ -3,4 +3,5 @@ litellm
 flask
 flask-cors
 python-dotenv
-supermemory
+supermemory==3.62.0  # 4.x+ is a different API
+gunicorn

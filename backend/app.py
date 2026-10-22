@@ -6,14 +6,14 @@ from flask_cors import CORS
 from pydantic import BaseModel, Field, ValidationError, field_validator
 import litellm
 from dotenv import load_dotenv
+
+# Load environment variables before importing modules that read them
+load_dotenv()
+
 from database import save_memory, search_memory
-from supermemory import Supermemory, APIConnectionError, RateLimitError, APIStatusError
 
 # Import the prompt templates
 from prompt_templates import PROMPT_TEMPLATES
-
-# Load environment variables from a .env file
-load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -30,10 +30,7 @@ else:
 os.environ["GEMINI_API_KEY"] = gemini_api_key
 litellm.api_key = gemini_api_key
 
-# Initialize Supermemory client
-supermemory_client = Supermemory(
-    api_key="sm_e6JuGZgu9Asv5B2CwxhC3E_eEJTsmIeJAXUQBAvFYtQuJWzCNUmLXnUkXwJnzjAZYOTsAgHrKyyENeoruLjJtny"
-)
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini/gemini-3.5-flash-lite")
 
 # =================================================================
 # 1) Pydantic Models for Structured Output
@@ -100,12 +97,11 @@ def call_llm(prompt, pydantic_model=None):
         response_format = {"type": "json_object"}
 
     try:
-        print(f"Making LLM call with model: gemini/gemini-1.5-flash-latest")
+        print(f"Making LLM call with model: {GEMINI_MODEL}")
         print(f"API Key present: {bool(os.getenv('GEMINI_API_KEY'))}")
 
         response = litellm.completion(
-            # model="gemini/gemini-1.5-flash-latest",
-            model="gemini/gemini-2.0-flash-lite",
+            model=GEMINI_MODEL,
             messages=messages,
             response_format=response_format,
         )
@@ -212,7 +208,7 @@ def extract_name():
 @app.route("/api/actions/outreach", methods=["POST"])
 def generate_outreach():
     data = request.json
-    applicant_name = data.get("applicantName", "Precious Nyaupane")  # Fallback to default
+    applicant_name = data.get("applicantName", "[Your Name]")  # Placeholder the user fills in
     
     prompt = PROMPT_TEMPLATES["outreach"].format(
         role=data["role"],
@@ -265,7 +261,7 @@ def tailor_resume():
 @app.route("/api/actions/cover-letter", methods=["POST"])
 def generate_cover_letter():
     data = request.json
-    applicant_name = data.get("applicantName", "Precious Nyaupane")  # Fallback to default
+    applicant_name = data.get("applicantName", "[Your Name]")  # Placeholder the user fills in
     
     prompt = PROMPT_TEMPLATES["cover_letter"].format(
         role=data["role"],
@@ -298,41 +294,7 @@ def detect_fraud():
 
 
 # =================================================================
-# 4) Supermemory API Endpoints (Functional)
-# =================================================================
-@app.route("/api/memory/save", methods=["POST"])
-def save_memory_endpoint():
-    data = request.json
-    content = json.dumps(data)
-    tags = data.get("tags", [])
-
-    # Call the external save_memory function
-    result = save_memory(content, tags)
-
-    if result:
-        return jsonify({"id": result.id})
-    else:
-        return jsonify({"error": "Failed to save memory"}), 500
-
-
-@app.route("/api/memory/search", methods=["POST"])
-def search_memory_endpoint():
-    data = request.json
-    query = data.get("query", "")
-
-    # Call the external search_memory function
-    results = search_memory(query)
-
-    if results:
-        # Process results to return a clean list of content
-        processed_results = [r.memory for r in results]
-        return jsonify({"items": processed_results})
-    else:
-        return jsonify({"items": []})
-
-
-# =================================================================
-# 5) Chatbot API Endpoint
+# 4) Chatbot API Endpoint
 # =================================================================
 @app.route("/api/chatbot-response", methods=["POST"])
 def chatbot_response():
@@ -341,8 +303,14 @@ def chatbot_response():
     if not user_message:
         return jsonify({"error": "No message provided."}), 400
 
+    # Each browser gets its own memory container so visitors never see each other's chats
+    session_id = data.get("sessionId", "")
+    if not re.fullmatch(r"[A-Za-z0-9-]{16,64}", session_id):
+        return jsonify({"error": "Invalid session id."}), 400
+    container_tag = f"apply-boost-chat-{session_id}"
+
     # 1. Search Supermemory for context based on the user's message
-    search_results = search_memory(user_message)
+    search_results = search_memory(user_message, container_tag)
     context = ""
     if search_results:
         # Concatenate memory contents into a single context string
@@ -365,9 +333,8 @@ User's Message:
         ai_response = call_llm(prompt)
 
         # 4. Save the conversation to Supermemory for future context
-        conversation_tags = ["chatbot-conversation"]
         conversation_content = f"User: {user_message}\nAssistant: {ai_response}"
-        save_memory(conversation_content, conversation_tags)
+        save_memory(conversation_content, container_tag)
 
         # 5. Return the AI's response to the client
         return jsonify({"response": ai_response})

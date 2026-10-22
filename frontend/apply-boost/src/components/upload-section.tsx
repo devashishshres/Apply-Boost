@@ -96,7 +96,7 @@ export function UploadSection() {
       const applicantName =
         nameExtraction.confidence > 0.5
           ? nameExtraction.name
-          : "Precious Nyaupane";
+          : "[Your Name]";
       console.log(
         "Extracted name:",
         applicantName,

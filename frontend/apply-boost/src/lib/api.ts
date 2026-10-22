@@ -151,10 +151,13 @@ class ApiService {
   }
 
   // Send message to chatbot
-  async sendChatMessage(message: string): Promise<ChatbotResponse> {
+  async sendChatMessage(
+    message: string,
+    sessionId: string
+  ): Promise<ChatbotResponse> {
     return this.makeRequest<ChatbotResponse>("/api/chatbot-response", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, sessionId }),
     });
   }
 

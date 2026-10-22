@@ -1,10 +1,4 @@
 // Utility functions for file handling and text extraction
-import * as pdfjsLib from "pdfjs-dist";
-
-// Configure PDF.js worker - use local worker file
-if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
-}
 
 export const extractTextFromFile = async (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -56,6 +50,9 @@ const extractTextFromPDF = async (
   arrayBuffer: ArrayBuffer
 ): Promise<string> => {
   try {
+    // Loaded lazily: pdfjs touches browser-only globals (DOMMatrix) and breaks server prerender
+    const pdfjsLib = await import("pdfjs-dist");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     let fullText = "";
 
