@@ -2,6 +2,8 @@
 
 > Transform any job application into a winning strategy with AI-powered application materials generation.
 
+**Try out Apply-Boost here:** https://applyboost.vercel.app/
+
 ## Overview
 
 **Apply-Boost** is an intelligent job application assistant that leverages artificial intelligence to help job seekers create compelling, personalized application materials. By analyzing your resume against specific job descriptions, Apply-Boost generates tailored content that significantly improves your chances of landing interviews.
